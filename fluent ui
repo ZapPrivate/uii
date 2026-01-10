@@ -4,86 +4,11 @@ local RunService = game:GetService("RunService")
 
 local LemonColors = {
     Yellow = Color3.fromRGB(255, 200, 0),
-    YellowBright = Color3.fromRGB(255, 220, 50),
-    YellowDark = Color3.fromRGB(200, 160, 0),
     Red = Color3.fromRGB(255, 60, 60),
-    RedBright = Color3.fromRGB(255, 80, 80),
     Orange = Color3.fromRGB(255, 120, 50),
-    OrangeBright = Color3.fromRGB(255, 150, 80),
-    Black = Color3.fromRGB(15, 15, 15),
-    BlackDark = Color3.fromRGB(10, 10, 10),
-    BlackLight = Color3.fromRGB(25, 25, 25),
-    Gray = Color3.fromRGB(40, 40, 40),
-    GrayLight = Color3.fromRGB(55, 55, 55),
-    White = Color3.fromRGB(255, 255, 255),
 }
 
 Fluent.LemonColors = LemonColors
-
-if Fluent.Themes and Fluent.Themes["Dark"] then
-    local DarkTheme = Fluent.Themes["Dark"]
-    
-    Fluent.Themes["Lemon"] = {
-        Name = "Lemon",
-        Accent = LemonColors.Yellow,
-        
-        AcrylicMain = DarkTheme.AcrylicMain or Color3.fromRGB(20, 20, 20),
-        AcrylicBorder = LemonColors.Yellow,
-        AcrylicGradient = DarkTheme.AcrylicGradient or ColorSequence.new(Color3.fromRGB(25, 25, 25), Color3.fromRGB(20, 20, 20)),
-        AcrylicNoise = DarkTheme.AcrylicNoise or 0.96,
-        
-        TitleBarLine = LemonColors.Yellow,
-        Tab = DarkTheme.Tab or Color3.fromRGB(150, 150, 150),
-        
-        Element = DarkTheme.Element or Color3.fromRGB(45, 45, 45),
-        ElementBorder = DarkTheme.ElementBorder or Color3.fromRGB(35, 35, 35),
-        InElementBorder = DarkTheme.InElementBorder or Color3.fromRGB(55, 55, 55),
-        ElementTransparency = DarkTheme.ElementTransparency or 0.85,
-        
-        ToggleSlider = DarkTheme.ToggleSlider or Color3.fromRGB(70, 70, 70),
-        ToggleToggled = DarkTheme.ToggleToggled or Color3.fromRGB(0, 0, 0),
-        
-        SliderRail = DarkTheme.SliderRail or Color3.fromRGB(70, 70, 70),
-        
-        DropdownFrame = DarkTheme.DropdownFrame or Color3.fromRGB(90, 90, 90),
-        DropdownHolder = DarkTheme.DropdownHolder or Color3.fromRGB(25, 25, 25),
-        DropdownBorder = DarkTheme.DropdownBorder or Color3.fromRGB(35, 35, 35),
-        DropdownOption = DarkTheme.DropdownOption or Color3.fromRGB(45, 45, 45),
-        
-        Keybind = DarkTheme.Keybind or Color3.fromRGB(70, 70, 70),
-        Input = DarkTheme.Input or Color3.fromRGB(90, 90, 90),
-        InputFocused = DarkTheme.InputFocused or Color3.fromRGB(12, 12, 12),
-        InputIndicator = LemonColors.Yellow,
-        
-        Dialog = DarkTheme.Dialog or Color3.fromRGB(25, 25, 25),
-        DialogHolder = DarkTheme.DialogHolder or Color3.fromRGB(18, 18, 18),
-        DialogHolderLine = DarkTheme.DialogHolderLine or Color3.fromRGB(22, 22, 22),
-        DialogButton = DarkTheme.DialogButton or Color3.fromRGB(30, 30, 30),
-        DialogButtonBorder = DarkTheme.DialogButtonBorder or Color3.fromRGB(50, 50, 50),
-        DialogBorder = DarkTheme.DialogBorder or Color3.fromRGB(45, 45, 45),
-        DialogInput = DarkTheme.DialogInput or Color3.fromRGB(35, 35, 35),
-        DialogInputLine = LemonColors.Yellow,
-        
-        Text = DarkTheme.Text or Color3.fromRGB(245, 245, 245),
-        SubText = DarkTheme.SubText or Color3.fromRGB(160, 160, 160),
-        
-        Hover = DarkTheme.Hover or Color3.fromRGB(60, 60, 60),
-        HoverChange = DarkTheme.HoverChange or 0.08,
-    }
-    
-    if type(Fluent.Themes) == "table" then
-        local found = false
-        for i, v in pairs(Fluent.Themes) do
-            if type(v) == "string" and v == "Lemon" then
-                found = true
-                break
-            end
-        end
-        if not found then
-            table.insert(Fluent.Themes, "Lemon")
-        end
-    end
-end
 
 local function CreateAnimatedOutline(windowRoot)
     local borderContainer = Instance.new("Frame")
@@ -170,22 +95,10 @@ end
 local originalCreateWindow = Fluent.CreateWindow
 
 Fluent.CreateWindow = function(self, options)
-    options = options or {}
-    if options.Theme == "Lemon" or options.Theme == nil then
-        options.Theme = "Dark"
-    end
-    
     local window = originalCreateWindow(self, options)
     
     task.spawn(function()
         task.wait(0.2)
-        
-        if Fluent.Themes and Fluent.Themes["Lemon"] then
-            pcall(function()
-                Fluent:SetTheme("Lemon")
-            end)
-        end
-        
         if window and window.Root then
             local outline, conn = CreateAnimatedOutline(window.Root)
             window.LemonOutline = outline
