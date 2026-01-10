@@ -11,9 +11,11 @@ local LemonColors = {
     RedBright = Color3.fromRGB(255, 80, 80),
     Orange = Color3.fromRGB(255, 120, 50),
     OrangeBright = Color3.fromRGB(255, 150, 80),
-    Black = Color3.fromRGB(12, 12, 12),
-    BlackLight = Color3.fromRGB(20, 20, 20),
-    Gray = Color3.fromRGB(35, 35, 35),
+    Black = Color3.fromRGB(15, 15, 15),
+    BlackDark = Color3.fromRGB(10, 10, 10),
+    BlackLight = Color3.fromRGB(25, 25, 25),
+    Gray = Color3.fromRGB(40, 40, 40),
+    GrayLight = Color3.fromRGB(55, 55, 55),
     White = Color3.fromRGB(255, 255, 255),
     WhiteMuted = Color3.fromRGB(180, 180, 180),
 }
@@ -24,39 +26,49 @@ if Fluent.Themes then
     Fluent.Themes["Lemon"] = {
         Name = "Lemon",
         Accent = LemonColors.Yellow,
-        AcrylicMain = LemonColors.Black,
-        AcrylicBorder = LemonColors.Red,
-        AcrylicGradient = ColorSequence.new(LemonColors.YellowDark, LemonColors.Red),
-        AcrylicNoise = 0.92,
+        
+        AcrylicMain = LemonColors.BlackDark,
+        AcrylicBorder = LemonColors.Yellow,
+        AcrylicGradient = ColorSequence.new(LemonColors.YellowDark, LemonColors.Orange),
+        AcrylicNoise = 0.94,
+        
         TitleBarLine = LemonColors.Yellow,
         Tab = LemonColors.WhiteMuted,
-        Element = Color3.fromRGB(45, 45, 45),
-        ElementBorder = LemonColors.Red,
-        InElementBorder = Color3.fromRGB(60, 60, 60),
-        ElementTransparency = 0.85,
-        ToggleSlider = Color3.fromRGB(80, 80, 80),
-        ToggleToggled = LemonColors.Black,
-        SliderRail = Color3.fromRGB(60, 60, 60),
-        DropdownFrame = Color3.fromRGB(50, 50, 50),
+        
+        Element = LemonColors.Gray,
+        ElementBorder = LemonColors.GrayLight,
+        InElementBorder = LemonColors.GrayLight,
+        ElementTransparency = 0.82,
+        
+        ToggleSlider = LemonColors.GrayLight,
+        ToggleToggled = LemonColors.BlackDark,
+        
+        SliderRail = LemonColors.GrayLight,
+        
+        DropdownFrame = LemonColors.GrayLight,
         DropdownHolder = LemonColors.BlackLight,
-        DropdownBorder = LemonColors.Red,
-        DropdownOption = Color3.fromRGB(45, 45, 45),
-        Keybind = Color3.fromRGB(50, 50, 50),
-        Input = Color3.fromRGB(50, 50, 50),
-        InputFocused = LemonColors.Black,
+        DropdownBorder = LemonColors.Gray,
+        DropdownOption = LemonColors.Gray,
+        
+        Keybind = LemonColors.GrayLight,
+        Input = LemonColors.GrayLight,
+        InputFocused = LemonColors.BlackDark,
         InputIndicator = LemonColors.Yellow,
+        
         Dialog = LemonColors.BlackLight,
-        DialogHolder = LemonColors.Black,
-        DialogHolderLine = Color3.fromRGB(25, 25, 25),
-        DialogButton = Color3.fromRGB(40, 40, 40),
-        DialogButtonBorder = LemonColors.Red,
-        DialogBorder = LemonColors.Red,
-        DialogInput = Color3.fromRGB(35, 35, 35),
+        DialogHolder = LemonColors.BlackDark,
+        DialogHolderLine = LemonColors.Black,
+        DialogButton = LemonColors.BlackLight,
+        DialogButtonBorder = LemonColors.GrayLight,
+        DialogBorder = LemonColors.Gray,
+        DialogInput = LemonColors.Gray,
         DialogInputLine = LemonColors.Yellow,
+        
         Text = LemonColors.White,
         SubText = LemonColors.WhiteMuted,
-        Hover = Color3.fromRGB(60, 60, 60),
-        HoverChange = 0.06,
+        
+        Hover = LemonColors.GrayLight,
+        HoverChange = 0.07,
     }
     
     if Fluent.Themes.Names then
@@ -98,7 +110,7 @@ local function CreateAnimatedOutline(windowRoot)
     
     local innerMask = Instance.new("Frame")
     innerMask.Name = "InnerMask"
-    innerMask.BackgroundColor3 = LemonColors.Black
+    innerMask.BackgroundColor3 = LemonColors.BlackDark
     innerMask.BackgroundTransparency = 0
     innerMask.Size = UDim2.new(1, -4, 1, -4)
     innerMask.Position = UDim2.new(0, 2, 0, 2)
@@ -131,9 +143,9 @@ local function CreateAnimatedOutline(windowRoot)
     glowGradient.Parent = glowFrame
     
     local animationTime = 0
-    local rotationSpeed = 45
+    local rotationSpeed = 50
     local pulseSpeed = 2
-    local offsetSpeed = 0.3
+    local offsetSpeed = 0.4
     
     local connection
     connection = RunService.RenderStepped:Connect(function(deltaTime)
@@ -145,8 +157,8 @@ local function CreateAnimatedOutline(windowRoot)
         animationTime = animationTime + deltaTime
         borderGradient.Rotation = (animationTime * rotationSpeed) % 360
         
-        local offsetX = math.sin(animationTime * offsetSpeed * math.pi * 2) * 0.3
-        local offsetY = math.cos(animationTime * offsetSpeed * math.pi * 2) * 0.3
+        local offsetX = math.sin(animationTime * offsetSpeed * math.pi * 2) * 0.35
+        local offsetY = math.cos(animationTime * offsetSpeed * math.pi * 2) * 0.35
         borderGradient.Offset = Vector2.new(offsetX, offsetY)
         
         local pulse = math.sin(animationTime * pulseSpeed) * 0.15 + 0.65
@@ -164,6 +176,10 @@ end
 local originalCreateWindow = Fluent.CreateWindow
 
 Fluent.CreateWindow = function(self, options)
+    if options.Theme == "Lemon" then
+        options.Acrylic = options.Acrylic ~= false
+    end
+    
     local window = originalCreateWindow(self, options)
     
     task.spawn(function()
