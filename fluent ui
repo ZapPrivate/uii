@@ -25,49 +25,50 @@ Fluent.LemonColors = LemonColors
 if Fluent.Themes then
     Fluent.Themes["Lemon"] = {
         Name = "Lemon",
+        
         Accent = LemonColors.Yellow,
         
-        AcrylicMain = LemonColors.BlackDark,
+        AcrylicMain = Color3.fromRGB(20, 20, 20),
         AcrylicBorder = LemonColors.Yellow,
-        AcrylicGradient = ColorSequence.new(LemonColors.YellowDark, LemonColors.Orange),
+        AcrylicGradient = ColorSequence.new(Color3.fromRGB(30, 30, 30), Color3.fromRGB(20, 20, 20)),
         AcrylicNoise = 0.94,
         
         TitleBarLine = LemonColors.Yellow,
-        Tab = LemonColors.WhiteMuted,
+        Tab = Color3.fromRGB(150, 150, 150),
         
-        Element = LemonColors.Gray,
-        ElementBorder = LemonColors.GrayLight,
-        InElementBorder = LemonColors.GrayLight,
-        ElementTransparency = 0.82,
+        Element = Color3.fromRGB(50, 50, 50),
+        ElementBorder = Color3.fromRGB(40, 40, 40),
+        InElementBorder = Color3.fromRGB(60, 60, 60),
+        ElementTransparency = 0.87,
         
-        ToggleSlider = LemonColors.GrayLight,
-        ToggleToggled = LemonColors.BlackDark,
+        ToggleSlider = Color3.fromRGB(80, 80, 80),
+        ToggleToggled = Color3.fromRGB(0, 0, 0),
         
-        SliderRail = LemonColors.GrayLight,
+        SliderRail = Color3.fromRGB(80, 80, 80),
         
-        DropdownFrame = LemonColors.GrayLight,
-        DropdownHolder = LemonColors.BlackLight,
-        DropdownBorder = LemonColors.Gray,
-        DropdownOption = LemonColors.Gray,
+        DropdownFrame = Color3.fromRGB(100, 100, 100),
+        DropdownHolder = Color3.fromRGB(30, 30, 30),
+        DropdownBorder = Color3.fromRGB(40, 40, 40),
+        DropdownOption = Color3.fromRGB(50, 50, 50),
         
-        Keybind = LemonColors.GrayLight,
-        Input = LemonColors.GrayLight,
-        InputFocused = LemonColors.BlackDark,
+        Keybind = Color3.fromRGB(80, 80, 80),
+        Input = Color3.fromRGB(100, 100, 100),
+        InputFocused = Color3.fromRGB(15, 15, 15),
         InputIndicator = LemonColors.Yellow,
         
-        Dialog = LemonColors.BlackLight,
-        DialogHolder = LemonColors.BlackDark,
-        DialogHolderLine = LemonColors.Black,
-        DialogButton = LemonColors.BlackLight,
-        DialogButtonBorder = LemonColors.GrayLight,
-        DialogBorder = LemonColors.Gray,
-        DialogInput = LemonColors.Gray,
+        Dialog = Color3.fromRGB(30, 30, 30),
+        DialogHolder = Color3.fromRGB(20, 20, 20),
+        DialogHolderLine = Color3.fromRGB(25, 25, 25),
+        DialogButton = Color3.fromRGB(35, 35, 35),
+        DialogButtonBorder = Color3.fromRGB(60, 60, 60),
+        DialogBorder = Color3.fromRGB(50, 50, 50),
+        DialogInput = Color3.fromRGB(40, 40, 40),
         DialogInputLine = LemonColors.Yellow,
         
-        Text = LemonColors.White,
-        SubText = LemonColors.WhiteMuted,
+        Text = Color3.fromRGB(240, 240, 240),
+        SubText = Color3.fromRGB(170, 170, 170),
         
-        Hover = LemonColors.GrayLight,
+        Hover = Color3.fromRGB(70, 70, 70),
         HoverChange = 0.07,
     }
     
@@ -110,7 +111,7 @@ local function CreateAnimatedOutline(windowRoot)
     
     local innerMask = Instance.new("Frame")
     innerMask.Name = "InnerMask"
-    innerMask.BackgroundColor3 = LemonColors.BlackDark
+    innerMask.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     innerMask.BackgroundTransparency = 0
     innerMask.Size = UDim2.new(1, -4, 1, -4)
     innerMask.Position = UDim2.new(0, 2, 0, 2)
@@ -176,10 +177,6 @@ end
 local originalCreateWindow = Fluent.CreateWindow
 
 Fluent.CreateWindow = function(self, options)
-    if options.Theme == "Lemon" then
-        options.Acrylic = options.Acrylic ~= false
-    end
-    
     local window = originalCreateWindow(self, options)
     
     task.spawn(function()
