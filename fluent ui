@@ -1,0 +1,234 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+local LemonColors = {
+    Yellow = Color3.fromRGB(255, 200, 0),
+    YellowBright = Color3.fromRGB(255, 220, 50),
+    YellowDark = Color3.fromRGB(200, 160, 0),
+    Red = Color3.fromRGB(255, 60, 60),
+    RedBright = Color3.fromRGB(255, 80, 80),
+    Orange = Color3.fromRGB(255, 120, 50),
+    OrangeBright = Color3.fromRGB(255, 150, 80),
+    Black = Color3.fromRGB(12, 12, 12),
+    BlackLight = Color3.fromRGB(20, 20, 20),
+    Gray = Color3.fromRGB(35, 35, 35),
+    White = Color3.fromRGB(255, 255, 255),
+    WhiteMuted = Color3.fromRGB(180, 180, 180),
+}
+
+Fluent.LemonColors = LemonColors
+
+if Fluent.Themes then
+    Fluent.Themes["Lemon"] = {
+        Name = "Lemon",
+        Accent = LemonColors.Yellow,
+        AcrylicMain = LemonColors.Black,
+        AcrylicBorder = LemonColors.Red,
+        AcrylicGradient = ColorSequence.new(LemonColors.YellowDark, LemonColors.Red),
+        AcrylicNoise = 0.92,
+        TitleBarLine = LemonColors.Yellow,
+        Tab = LemonColors.WhiteMuted,
+        Element = Color3.fromRGB(45, 45, 45),
+        ElementBorder = LemonColors.Red,
+        InElementBorder = Color3.fromRGB(60, 60, 60),
+        ElementTransparency = 0.85,
+        ToggleSlider = Color3.fromRGB(80, 80, 80),
+        ToggleToggled = LemonColors.Black,
+        SliderRail = Color3.fromRGB(60, 60, 60),
+        DropdownFrame = Color3.fromRGB(50, 50, 50),
+        DropdownHolder = LemonColors.BlackLight,
+        DropdownBorder = LemonColors.Red,
+        DropdownOption = Color3.fromRGB(45, 45, 45),
+        Keybind = Color3.fromRGB(50, 50, 50),
+        Input = Color3.fromRGB(50, 50, 50),
+        InputFocused = LemonColors.Black,
+        InputIndicator = LemonColors.Yellow,
+        Dialog = LemonColors.BlackLight,
+        DialogHolder = LemonColors.Black,
+        DialogHolderLine = Color3.fromRGB(25, 25, 25),
+        DialogButton = Color3.fromRGB(40, 40, 40),
+        DialogButtonBorder = LemonColors.Red,
+        DialogBorder = LemonColors.Red,
+        DialogInput = Color3.fromRGB(35, 35, 35),
+        DialogInputLine = LemonColors.Yellow,
+        Text = LemonColors.White,
+        SubText = LemonColors.WhiteMuted,
+        Hover = Color3.fromRGB(60, 60, 60),
+        HoverChange = 0.06,
+    }
+    
+    if Fluent.Themes.Names then
+        table.insert(Fluent.Themes.Names, "Lemon")
+    end
+end
+
+local function CreateAnimatedOutline(windowRoot)
+    local borderContainer = Instance.new("Frame")
+    borderContainer.Name = "LemonAnimatedBorder"
+    borderContainer.BackgroundTransparency = 1
+    borderContainer.Size = UDim2.new(1, 6, 1, 6)
+    borderContainer.Position = UDim2.new(0, -3, 0, -3)
+    borderContainer.ZIndex = 0
+    borderContainer.Parent = windowRoot
+    
+    local borderFrame = Instance.new("Frame")
+    borderFrame.Name = "GlowBorder"
+    borderFrame.BackgroundColor3 = LemonColors.Yellow
+    borderFrame.Size = UDim2.new(1, 0, 1, 0)
+    borderFrame.Position = UDim2.new(0, 0, 0, 0)
+    borderFrame.ZIndex = 0
+    borderFrame.Parent = borderContainer
+    
+    local borderCorner = Instance.new("UICorner")
+    borderCorner.CornerRadius = UDim.new(0, 10)
+    borderCorner.Parent = borderFrame
+    
+    local borderGradient = Instance.new("UIGradient")
+    borderGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, LemonColors.Yellow),
+        ColorSequenceKeypoint.new(0.25, LemonColors.Orange),
+        ColorSequenceKeypoint.new(0.5, LemonColors.Red),
+        ColorSequenceKeypoint.new(0.75, LemonColors.Orange),
+        ColorSequenceKeypoint.new(1, LemonColors.Yellow)
+    })
+    borderGradient.Rotation = 0
+    borderGradient.Parent = borderFrame
+    
+    local innerMask = Instance.new("Frame")
+    innerMask.Name = "InnerMask"
+    innerMask.BackgroundColor3 = LemonColors.Black
+    innerMask.BackgroundTransparency = 0
+    innerMask.Size = UDim2.new(1, -4, 1, -4)
+    innerMask.Position = UDim2.new(0, 2, 0, 2)
+    innerMask.ZIndex = 1
+    innerMask.Parent = borderFrame
+    
+    local innerCorner = Instance.new("UICorner")
+    innerCorner.CornerRadius = UDim.new(0, 8)
+    innerCorner.Parent = innerMask
+    
+    local glowFrame = Instance.new("ImageLabel")
+    glowFrame.Name = "OuterGlow"
+    glowFrame.BackgroundTransparency = 1
+    glowFrame.Image = "rbxassetid://5028857084"
+    glowFrame.ImageColor3 = LemonColors.Yellow
+    glowFrame.ImageTransparency = 0.7
+    glowFrame.ScaleType = Enum.ScaleType.Slice
+    glowFrame.SliceCenter = Rect.new(24, 24, 276, 276)
+    glowFrame.Size = UDim2.new(1, 20, 1, 20)
+    glowFrame.Position = UDim2.new(0, -10, 0, -10)
+    glowFrame.ZIndex = -1
+    glowFrame.Parent = borderContainer
+    
+    local glowGradient = Instance.new("UIGradient")
+    glowGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, LemonColors.Yellow),
+        ColorSequenceKeypoint.new(0.5, LemonColors.Red),
+        ColorSequenceKeypoint.new(1, LemonColors.Yellow)
+    })
+    glowGradient.Parent = glowFrame
+    
+    local animationTime = 0
+    local rotationSpeed = 45
+    local pulseSpeed = 2
+    local offsetSpeed = 0.3
+    
+    local connection
+    connection = RunService.RenderStepped:Connect(function(deltaTime)
+        if not borderContainer or not borderContainer.Parent then
+            connection:Disconnect()
+            return
+        end
+        
+        animationTime = animationTime + deltaTime
+        borderGradient.Rotation = (animationTime * rotationSpeed) % 360
+        
+        local offsetX = math.sin(animationTime * offsetSpeed * math.pi * 2) * 0.3
+        local offsetY = math.cos(animationTime * offsetSpeed * math.pi * 2) * 0.3
+        borderGradient.Offset = Vector2.new(offsetX, offsetY)
+        
+        local pulse = math.sin(animationTime * pulseSpeed) * 0.15 + 0.65
+        glowFrame.ImageTransparency = pulse
+        
+        glowGradient.Rotation = (360 - (animationTime * rotationSpeed * 0.5)) % 360
+        
+        local colorShift = (math.sin(animationTime * 0.5) + 1) / 2
+        glowFrame.ImageColor3 = LemonColors.Yellow:Lerp(LemonColors.Red, colorShift)
+    end)
+    
+    return borderContainer, connection
+end
+
+local originalCreateWindow = Fluent.CreateWindow
+
+Fluent.CreateWindow = function(self, options)
+    local window = originalCreateWindow(self, options)
+    
+    task.spawn(function()
+        task.wait(0.1)
+        
+        if window and window.Root then
+            local outline, conn = CreateAnimatedOutline(window.Root)
+            
+            window.LemonOutline = outline
+            window.LemonOutlineConnection = conn
+            
+            local originalDestroy = window.Destroy
+            if originalDestroy then
+                window.Destroy = function(...)
+                    if conn then
+                        conn:Disconnect()
+                    end
+                    if outline then
+                        outline:Destroy()
+                    end
+                    return originalDestroy(...)
+                end
+            end
+        end
+    end)
+    
+    return window
+end
+
+function Fluent.AddLemonBorder(frame, thickness)
+    thickness = thickness or 2
+    
+    local borderFrame = Instance.new("Frame")
+    borderFrame.Name = "LemonBorder"
+    borderFrame.BackgroundColor3 = LemonColors.Yellow
+    borderFrame.Size = UDim2.new(1, thickness * 2, 1, thickness * 2)
+    borderFrame.Position = UDim2.new(0, -thickness, 0, -thickness)
+    borderFrame.ZIndex = frame.ZIndex - 1
+    borderFrame.Parent = frame.Parent
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = borderFrame
+    
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, LemonColors.Yellow),
+        ColorSequenceKeypoint.new(0.5, LemonColors.Red),
+        ColorSequenceKeypoint.new(1, LemonColors.Yellow)
+    })
+    gradient.Parent = borderFrame
+    
+    local time = 0
+    local conn
+    conn = RunService.RenderStepped:Connect(function(dt)
+        if not borderFrame or not borderFrame.Parent then
+            conn:Disconnect()
+            return
+        end
+        time = time + dt
+        gradient.Rotation = (time * 60) % 360
+        gradient.Offset = Vector2.new(math.sin(time) * 0.2, math.cos(time) * 0.2)
+    end)
+    
+    return borderFrame, conn
+end
+
+return Fluent
