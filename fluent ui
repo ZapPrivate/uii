@@ -22,58 +22,68 @@ local LemonColors = {
 
 Fluent.LemonColors = LemonColors
 
-if Fluent.Themes then
-    Fluent.Themes["Lemon"] = {
-        Name = "Lemon",
-        
-        Accent = LemonColors.Yellow,
-        
-        AcrylicMain = Color3.fromRGB(20, 20, 20),
-        AcrylicBorder = LemonColors.Yellow,
-        AcrylicGradient = ColorSequence.new(Color3.fromRGB(30, 30, 30), Color3.fromRGB(20, 20, 20)),
-        AcrylicNoise = 0.94,
-        
-        TitleBarLine = LemonColors.Yellow,
-        Tab = Color3.fromRGB(150, 150, 150),
-        
-        Element = Color3.fromRGB(50, 50, 50),
-        ElementBorder = Color3.fromRGB(40, 40, 40),
-        InElementBorder = Color3.fromRGB(60, 60, 60),
-        ElementTransparency = 0.87,
-        
-        ToggleSlider = Color3.fromRGB(80, 80, 80),
-        ToggleToggled = Color3.fromRGB(0, 0, 0),
-        
-        SliderRail = Color3.fromRGB(80, 80, 80),
-        
-        DropdownFrame = Color3.fromRGB(100, 100, 100),
-        DropdownHolder = Color3.fromRGB(30, 30, 30),
-        DropdownBorder = Color3.fromRGB(40, 40, 40),
-        DropdownOption = Color3.fromRGB(50, 50, 50),
-        
-        Keybind = Color3.fromRGB(80, 80, 80),
-        Input = Color3.fromRGB(100, 100, 100),
-        InputFocused = Color3.fromRGB(15, 15, 15),
-        InputIndicator = LemonColors.Yellow,
-        
-        Dialog = Color3.fromRGB(30, 30, 30),
-        DialogHolder = Color3.fromRGB(20, 20, 20),
-        DialogHolderLine = Color3.fromRGB(25, 25, 25),
-        DialogButton = Color3.fromRGB(35, 35, 35),
-        DialogButtonBorder = Color3.fromRGB(60, 60, 60),
-        DialogBorder = Color3.fromRGB(50, 50, 50),
-        DialogInput = Color3.fromRGB(40, 40, 40),
-        DialogInputLine = LemonColors.Yellow,
-        
-        Text = Color3.fromRGB(240, 240, 240),
-        SubText = Color3.fromRGB(170, 170, 170),
-        
-        Hover = Color3.fromRGB(70, 70, 70),
-        HoverChange = 0.07,
-    }
+local LemonTheme = {
+    Name = "Lemon",
+    Accent = LemonColors.Yellow,
     
-    if Fluent.Themes.Names then
-        table.insert(Fluent.Themes.Names, "Lemon")
+    AcrylicMain = Color3.fromRGB(15, 15, 15),
+    AcrylicBorder = LemonColors.Yellow,
+    AcrylicGradient = ColorSequence.new(Color3.fromRGB(25, 25, 25), Color3.fromRGB(15, 15, 15)),
+    AcrylicNoise = 0.96,
+    
+    TitleBarLine = LemonColors.Yellow,
+    Tab = Color3.fromRGB(150, 150, 150),
+    
+    Element = Color3.fromRGB(45, 45, 45),
+    ElementBorder = Color3.fromRGB(35, 35, 35),
+    InElementBorder = Color3.fromRGB(55, 55, 55),
+    ElementTransparency = 0.85,
+    
+    ToggleSlider = Color3.fromRGB(70, 70, 70),
+    ToggleToggled = Color3.fromRGB(0, 0, 0),
+    
+    SliderRail = Color3.fromRGB(70, 70, 70),
+    
+    DropdownFrame = Color3.fromRGB(90, 90, 90),
+    DropdownHolder = Color3.fromRGB(25, 25, 25),
+    DropdownBorder = Color3.fromRGB(35, 35, 35),
+    DropdownOption = Color3.fromRGB(45, 45, 45),
+    
+    Keybind = Color3.fromRGB(70, 70, 70),
+    Input = Color3.fromRGB(90, 90, 90),
+    InputFocused = Color3.fromRGB(12, 12, 12),
+    InputIndicator = LemonColors.Yellow,
+    
+    Dialog = Color3.fromRGB(25, 25, 25),
+    DialogHolder = Color3.fromRGB(18, 18, 18),
+    DialogHolderLine = Color3.fromRGB(22, 22, 22),
+    DialogButton = Color3.fromRGB(30, 30, 30),
+    DialogButtonBorder = Color3.fromRGB(50, 50, 50),
+    DialogBorder = Color3.fromRGB(45, 45, 45),
+    DialogInput = Color3.fromRGB(35, 35, 35),
+    DialogInputLine = LemonColors.Yellow,
+    
+    Text = Color3.fromRGB(245, 245, 245),
+    SubText = Color3.fromRGB(160, 160, 160),
+    
+    Hover = Color3.fromRGB(60, 60, 60),
+    HoverChange = 0.08,
+}
+
+if Fluent.Themes then
+    Fluent.Themes["Lemon"] = LemonTheme
+    
+    if type(Fluent.Themes) == "table" then
+        local hasLemon = false
+        for i, name in ipairs(Fluent.Themes) do
+            if name == "Lemon" then
+                hasLemon = true
+                break
+            end
+        end
+        if not hasLemon then
+            table.insert(Fluent.Themes, 1, "Lemon")
+        end
     end
 end
 
@@ -150,6 +160,10 @@ local function CreateAnimatedOutline(windowRoot)
     
     local connection
     connection = RunService.RenderStepped:Connect(function(deltaTime)
+        if Fluent.Unloaded then
+            connection:Disconnect()
+            return
+        end
         if not borderContainer or not borderContainer.Parent then
             connection:Disconnect()
             return
@@ -180,7 +194,11 @@ Fluent.CreateWindow = function(self, options)
     local window = originalCreateWindow(self, options)
     
     task.spawn(function()
-        task.wait(0.1)
+        task.wait(0.15)
+        
+        pcall(function()
+            Fluent:SetTheme("Lemon")
+        end)
         
         if window and window.Root then
             local outline, conn = CreateAnimatedOutline(window.Root)
@@ -232,6 +250,10 @@ function Fluent.AddLemonBorder(frame, thickness)
     local time = 0
     local conn
     conn = RunService.RenderStepped:Connect(function(dt)
+        if Fluent.Unloaded then
+            conn:Disconnect()
+            return
+        end
         if not borderFrame or not borderFrame.Parent then
             conn:Disconnect()
             return
